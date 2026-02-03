@@ -2,7 +2,7 @@
 
 A professional web-based tool for creating custom Cyrillic (Ukrainian) characters for standard LCD 1602 displays based on the HD44780 controller.
 
-🔴 **Live Demo:** [https://Alexsik76.github.io/lcd-1602-workbench/](посилання_з'явиться_після_деплою)
+🔴 **Live Demo:** [https://alexsik76.github.io/ua-lcd-tool/]
 
 ## ⚡ Features
 

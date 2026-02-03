@@ -82,7 +82,7 @@ body.debug-mode .char-rom { opacity: 0.6; }
 
 /* Custom RAM (Наші) */
 body.debug-mode .char-custom {
-    border-bottom: 3px solid var(--ram-highlight);
+    box-shadow: 0 3px 0 var(--ram-highlight); 
     cursor: pointer;
 }
 /* Підсвічуємо самі пікселі яскравіше в режимі дебагу */
