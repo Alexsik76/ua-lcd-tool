@@ -1,7 +1,7 @@
 :root {
     --lcd-bg: #89C33F;
     --lcd-pixel-on: #1A3E08;
-    --lcd-pixel-off: rgba(26, 62, 8, 0.08); /* Ледь помітні вимкнені пікселі для реалізму */
+    --lcd-pixel-off: rgba(26, 62, 8, 0.08); 
     --ram-highlight: #FFEB3B;
     --error-color: #D32F2F;
     --panel-bg: #2b3136;
@@ -44,21 +44,20 @@ h1, h2, h3 { font-family: 'Share Tech Mono', monospace; }
 .lcd-screen {
     background-color: var(--lcd-bg);
     padding: 10px 15px; border-radius: 2px;
-    min-height: 70px; /* Висота підібрана під піксельну сітку */
+    min-height: 70px; 
     box-shadow: inset 0 0 15px rgba(0,0,0,0.2);
-    display: flex; flex-wrap: wrap; gap: 4px; /* Відступ між літерами */
+    display: flex; flex-wrap: wrap; gap: 4px; 
 }
 
 /* --- NEW PIXEL-PERFECT CHARACTERS --- */
 .char-box {
-    width: 27px; /* 5 пікселів по 4px + відступи */
-    height: 44px; /* 8 пікселів по 4px + відступи */
+    width: 27px; 
+    height: 44px; 
     position: relative;
     cursor: default;
     transition: all 0.2s;
 }
 
-/* Міні-сітка всередині кожної літери на екрані */
 .mini-grid {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
@@ -77,21 +76,17 @@ h1, h2, h3 { font-family: 'Share Tech Mono', monospace; }
 
 /* STYLES FOR DEBUG/REALISM */
 
-/* ROM (Вбудовані) */
 body.debug-mode .char-rom { opacity: 0.6; }
 
-/* Custom RAM (Наші) */
 body.debug-mode .char-custom {
     box-shadow: 0 3px 0 var(--ram-highlight); 
     cursor: pointer;
 }
-/* Підсвічуємо самі пікселі яскравіше в режимі дебагу */
 body.debug-mode .char-custom .mini-pixel.on {
     background-color: #0f2503; 
     box-shadow: 0 0 2px var(--ram-highlight);
 }
 
-/* Missing (Помилки) */
 .char-missing {
     border: 1px dashed var(--error-color);
     background: rgba(211, 47, 47, 0.1);
@@ -99,30 +94,29 @@ body.debug-mode .char-custom .mini-pixel.on {
     color: var(--error-color); font-weight: bold; font-size: 20px;
     cursor: pointer;
 }
-.char-missing .mini-grid { display: none; } /* Не показуємо сітку для відсутніх */
+.char-missing .mini-grid { display: none; } 
 
 /* Realism Mode Cleanup */
 body:not(.debug-mode) .char-custom { border: none; }
-body:not(.debug-mode) .char-missing { opacity: 0; } /* Просто пусте місце */
+body:not(.debug-mode) .char-missing { opacity: 0; } 
 
 /* INPUT & METRICS */
 /* TERMINAL INPUT STYLE */
 /* TERMINAL INPUT STYLE */
 .input-group {
     display: flex;
-    align-items: baseline; /* Вирівнювання по базовій лінії тексту - ідеально для шрифтів */
+    align-items: baseline; 
     background: #000;
     border: 1px solid #444;
     border-left: 4px solid var(--lcd-bg);
     border-radius: 4px;
-    padding: 12px 15px; /* Трохи більше повітря */
+    padding: 12px 15px; 
     margin-top: 20px;
     transition: all 0.3s ease;
     box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    cursor: text; /* Курсор тексту при наведенні на весь блок */
+    cursor: text; 
 }
 
-/* Клік по контейнеру передає фокус інпуту (JS не треба, це CSS трюк focus-within) */
 .input-group:focus-within {
     border-color: #666;
     border-left-color: var(--ram-highlight);
@@ -137,7 +131,7 @@ body:not(.debug-mode) .char-missing { opacity: 0; } /* Просто пусте �
     margin-right: 12px;
     font-weight: bold;
     user-select: none;
-    line-height: 1; /* Фіксуємо висоту рядка */
+    line-height: 1; 
 }
 
 .main-input {
@@ -150,12 +144,11 @@ body:not(.debug-mode) .char-missing { opacity: 0; } /* Просто пусте �
     outline: none;
     letter-spacing: 1px;
     
-    /* ВИПРАВЛЕННЯ ЦЕНТРУВАННЯ */
-    margin-bottom: 0 !important; /* Перебиваємо стилі Pico CSS */
+    margin-bottom: 0 !important; 
     height: auto;
     padding: 0;
-    line-height: 1; /* Синхронізуємо з prompt */
-    box-shadow: none !important; /* Прибираємо дефолтне світіння Pico */
+    line-height: 1; 
+    box-shadow: none !important; 
 }
 
 .main-input::placeholder {
@@ -163,14 +156,14 @@ body:not(.debug-mode) .char-missing { opacity: 0; } /* Просто пусте �
     opacity: 0.5;
     font-style: italic;
     font-size: 1.2rem;
-    line-height: normal; /* Для placeholder це виглядає краще */
+    line-height: normal; 
 }
 
 .metrics-bar { 
     display: flex; 
     align-items: center; 
-    justify-content: flex-start; /* Все зліва */
-    gap: 0; /* Відступи контролюємо елементами */
+    justify-content: flex-start; 
+    gap: 0; 
     font-size: 0.85rem; 
     color: #aaa; 
     margin-top: 10px;
@@ -184,39 +177,65 @@ body:not(.debug-mode) .char-missing { opacity: 0; } /* Просто пусте �
     display: flex; 
     align-items: center; 
     gap: 12px; 
-    padding-right: 20px; /* Відступ справа */
+    padding-right: 20px; 
 }
 
-/* Статус тепер зліва, поруч з RAM, але відділений лінією */
+
 .metric.status {
     margin-left: 0; 
     padding-left: 20px;
     padding-right: 0;
-    border-left: 1px solid rgba(255,255,255,0.15); /* Вертикальний розділювач */
+    border-left: 1px solid rgba(255,255,255,0.15); 
     font-weight: bold;
     letter-spacing: 1px;
     transition: color 0.3s;
     text-shadow: 0 0 10px rgba(0,0,0,0.5);
 }
 
-/* Світлодіод (крапка) перед текстом статусу */
+
 .metric.status::before {
     content: '';
     display: block;
     width: 8px; height: 8px;
     border-radius: 50%;
-    background-color: currentColor; /* Світиться тим же кольором, що і текст */
-    box-shadow: 0 0 8px currentColor; /* Ефект світіння */
+    background-color: currentColor; 
+    box-shadow: 0 0 8px currentColor; 
     margin-right: 8px;
 }
 progress { width: 120px; height: 8px; }
 
 /* TABS & TOOLS */
 .tools-panel { background: #1e2124; border-radius: 8px; border: 1px solid #333; overflow: hidden; }
-.tabs-nav ul { display: flex; list-style: none; margin: 0; padding: 0; background: #15171a; border-bottom: 1px solid #333; }
+.tabs-nav ul { 
+    display: flex; 
+    list-style: none; 
+    margin: 0; 
+    padding: 0; 
+    background: #15171a; 
+    border-bottom: 1px solid #333; 
+    
+    overflow-x: auto;              
+    -webkit-overflow-scrolling: touch; 
+    scrollbar-width: none;         
+}
+
+.tabs-nav ul::-webkit-scrollbar {
+    display: none; 
+}
+
 .tab-link {
-    padding: 12px 20px; color: #888; text-decoration: none; display: flex; align-items: center; gap: 8px;
-    font-size: 0.9rem; border-right: 1px solid #222; transition: all 0.2s;
+    padding: 12px 20px; 
+    color: #888; 
+    text-decoration: none; 
+    display: flex; 
+    align-items: center; 
+    gap: 8px;
+    font-size: 0.9rem; 
+    border-right: 1px solid #222; 
+    transition: all 0.2s;
+    
+    white-space: nowrap; 
+    flex-shrink: 0;      
 }
 .tab-link:hover { background: #222; color: #fff; }
 .tab-link.active { background: #1e2124; color: var(--lcd-bg); border-top: 3px solid var(--lcd-bg); }
@@ -236,7 +255,7 @@ progress { width: 120px; height: 8px; }
     border: 1px solid #444; 
     border-radius: 2px; 
     cursor: pointer;
-    box-sizing: border-box; /* Важливо, щоб border не ламав сітку */
+    box-sizing: border-box; 
 }
 
 .pixel.active { 
@@ -245,14 +264,12 @@ progress { width: 120px; height: 8px; }
     border-color: var(--lcd-bg); 
 }
 
-/* ЛІНІЇ-ПІДКАЗКИ (Зроблені яскравішими) */
-/* Верхня лінія (Ascender) - після 1-го рядка */
+
 .pixel:nth-child(n+6):nth-child(-n+10) {
     border-bottom: 2px solid rgba(255, 255, 255, 0.3);
 }
 
-/* Базова лінія (Baseline) - після 7-го рядка (пікселі 31-35) */
-/* Більшість літер стоять на ній, хвостики (y, g) йдуть нижче */
+
 .pixel:nth-child(n+31):nth-child(-n+35) {
     border-bottom: 2px solid rgba(255, 255, 255, 0.3);
 }

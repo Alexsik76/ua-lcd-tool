@@ -18,36 +18,84 @@ export function transliterate(char) {
     return trans.toUpperCase();
 }
 
+// Helper to get UTF-8 HEX code (e.g., 'ч' -> 0xD187)
+function getUtf8Hex(char) {
+    const encoder = new TextEncoder();
+    const bytes = encoder.encode(char);
+    
+    // Cyrillic chars in UTF-8 are usually 2 bytes
+    if (bytes.length === 2) {
+        // Merge bytes: High Byte << 8 | Low Byte
+        const val = (bytes[0] << 8) | bytes[1];
+        return "0x" + val.toString(16).toUpperCase();
+    }
+    // ASCII or single byte
+    if (bytes.length === 1) {
+         return "0x" + bytes[0].toString(16).toUpperCase();
+    }
+    return "0x0000"; // Fallback
+}
+
 export function generateCppContent(ramLibrary) {
     const chars = Object.keys(ramLibrary);
     
     if (chars.length === 0) {
         return {
-            arrayCode: "// No custom glyphs created yet.",
-            usageCode: "// Generate characters first"
+            arrayCode: "// Create symbols to generate code.",
+            usageCode: "// Table will appear here"
         };
     }
 
-    let arrayCode = "";
-    // ВИПРАВЛЕННЯ ТУТ: використовуємо <br> для HTML відображення
-    let usageCode = "// Usage Example:<br>// Add inside setup():<br>"; 
+    // 1. Glyphs.h Header
+    let fullCode = `#ifndef GLYPHS_H
+#define GLYPHS_H
+
+#include <Arduino.h>
+
+// Struct for Mapping: Char Code -> Pixel Array
+struct CustomGlyphMap {
+    uint16_t code;      // UTF-8 code (e.g. 0xD187)
+    const uint8_t* ptr; // Pointer to GLYPH_... array
+};
+
+// ==========================================
+// GENERATED GLYPHS
+// ==========================================
+`;
+
+    let mapEntries = "";
 
     chars.forEach((char, idx) => {
         let safeName = "GLYPH_" + transliterate(char);
         let bytes = ramLibrary[char];
+        let hexCode = getUtf8Hex(char);
         
-        // C++ Array code (для textarea \n працює добре)
-        arrayCode += `// Symbol '${char}'\n`;
-        arrayCode += `const uint8_t ${safeName}[] PROGMEM = {\n`;
+        // Generate byte array
+        fullCode += `// Symbol '${char}' (UTF-8: ${hexCode})\n`;
+        fullCode += `const uint8_t ${safeName}[] PROGMEM = {\n`;
         bytes.forEach((b, i) => {
             let bin = '0b' + b.toString(2).padStart(5, '0');
-            arrayCode += `  ${bin}${i<7?',':''}\n`;
+            fullCode += `  ${bin}${i<7?',':''}\n`;
         });
-        arrayCode += `};\n\n`;
+        fullCode += `};\n\n`;
         
-        // Usage code (для div footer потрібен <br>)
-        usageCode += `lcd.createChar(${idx}, ${safeName}); // Map '${char}' to index ${idx}<br>`;
+        // Add entry to map
+        mapEntries += `    { ${hexCode}, ${safeName} }, // ${char}\n`;
     });
 
-    return { arrayCode: arrayCode.trim(), usageCode };
+    // 2. Add Automatic Mapping Table
+    fullCode += `// ==========================================
+// AUTOMATIC MAPPING TABLE
+// ==========================================
+const CustomGlyphMap CUSTOM_MAP[] = {
+${mapEntries}};
+
+// Map length for loops
+const uint8_t CUSTOM_MAP_LEN = sizeof(CUSTOM_MAP) / sizeof(CUSTOM_MAP[0]);
+
+#endif // GLYPHS_H`;
+
+    let usageHint = `// Copy everything from the left panel to Glyphs.h\n// And use LcdStringParser in your sketch.`;
+
+    return { arrayCode: fullCode, usageCode: usageHint };
 }
